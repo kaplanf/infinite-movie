@@ -4,11 +4,14 @@ import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -100,6 +103,9 @@ public class MovieListAdapter extends RecyclerView.Adapter<BaseViewHolder> imple
 
   public class ViewHolder extends BaseViewHolder {
 
+    @BindView(R.id.movie_item_card)
+    CardView cardView;
+
     @BindView(R.id.movie_item_image)
     ImageView itemImage;
 
@@ -139,10 +145,17 @@ public class MovieListAdapter extends RecyclerView.Adapter<BaseViewHolder> imple
 
       GradientDrawable gradientDrawable = new GradientDrawable();
       gradientDrawable.setShape(GradientDrawable.RECTANGLE);
-      gradientDrawable.setColor(mContext.getResources().getColor(R.color.dark_green,null));
+      gradientDrawable.setColor(mContext.getResources().getColor(R.color.dark_green, null));
       Picasso.get().load(ApiEndPoint.IMAGE_BASE + movieObject.getPosterPath())
           .networkPolicy(NetworkPolicy.OFFLINE).placeholder(gradientDrawable)
           .into(itemImage);
+
+      cardView.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View view) {
+          mCallback.onItemClicked(moviesFiltered.get(position));
+        }
+      });
 
     }
   }
@@ -169,6 +182,8 @@ public class MovieListAdapter extends RecyclerView.Adapter<BaseViewHolder> imple
   public interface Callback {
 
     void onLoadMore();
+
+    void onItemClicked(MovieObject movieObject);
   }
 
   @Override

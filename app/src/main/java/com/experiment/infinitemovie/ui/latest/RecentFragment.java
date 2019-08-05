@@ -54,6 +54,13 @@ public class RecentFragment extends BaseFragment implements RecentMvpView,
   SearchView.SearchAutoComplete searchAutoComplete;
   SearchView searchView;
 
+  public interface CallBack {
+
+    void detailClick(MovieObject movieObject);
+  }
+
+  private CallBack callBack;
+
   public static RecentFragment newInstance() {
     Bundle args = new Bundle();
     RecentFragment fragment = new RecentFragment();
@@ -62,6 +69,7 @@ public class RecentFragment extends BaseFragment implements RecentMvpView,
 
   public void onAttach(Context context) {
     super.onAttach(context);
+    callBack = (CallBack) context;
   }
 
   @Nullable
@@ -128,14 +136,17 @@ public class RecentFragment extends BaseFragment implements RecentMvpView,
     mPresenter.getLatestMovies(page);
   }
 
+  @Override
+  public void onItemClicked(MovieObject movieObject) {
+    callBack.detailClick(movieObject);
+  }
+
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     menu.clear();
     inflater.inflate(R.menu.menu_main, menu);
     MenuItem item = menu.findItem(R.id.action_search);
     searchView = (SearchView) item.getActionView();
-    item.setShowAsAction(
-        MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_IF_ROOM);
     item.setActionView(searchView);
     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
       @Override
@@ -164,8 +175,7 @@ public class RecentFragment extends BaseFragment implements RecentMvpView,
     searchAutoComplete.setAdapter(titleAdapter);
     searchAutoComplete.setOnItemClickListener((adapterView, view, i, l) -> {
       searchAutoComplete.dismissDropDown();
-      searchView.setQuery(adapterView.getItemAtPosition(i).toString(),true);
+      searchView.setQuery(adapterView.getItemAtPosition(i).toString(), true);
     });
-
   }
 }

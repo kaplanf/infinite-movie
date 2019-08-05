@@ -6,6 +6,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.experiment.infinitemovie.data.network.model.MovieObject;
 import com.experiment.infinitemovie.di.ActivityContext;
 import com.experiment.infinitemovie.di.PerActivity;
+import com.experiment.infinitemovie.ui.detail.DetailMvpPresenter;
+import com.experiment.infinitemovie.ui.detail.DetailMvpView;
+import com.experiment.infinitemovie.ui.detail.DetailPresenter;
 import com.experiment.infinitemovie.ui.latest.RecentMvpPresenter;
 import com.experiment.infinitemovie.ui.latest.RecentMvpView;
 import com.experiment.infinitemovie.ui.latest.RecentPresenter;
@@ -66,6 +69,12 @@ public class ActivityModule {
   @Provides
   RecentMvpPresenter<RecentMvpView> provideRecentPresenter(
       RecentPresenter<RecentMvpView> presenter) {
+    return presenter;
+  }
+
+  @Provides
+  DetailMvpPresenter<DetailMvpView> provideDetailPresenter(
+      DetailPresenter<DetailMvpView> presenter){
     return presenter;
   }
 
